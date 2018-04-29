@@ -233,18 +233,14 @@ def create_auc_lookup(exp_df, gene_list, ontology):
 
 
 def clean_SVG(svg_filename, output_filename):
-    remove_attribs = ['Atlas - Human Hotspots', 'Atlas - Human Sulci']
-    with open(svg_filename, 'r') as svg:
-        doc = ET.parse(svg)
-        root = doc.getroot()
+    with open(svg_filename, 'r') as svg, open(output_filename, 'w') as outfile:
+        soup = BeautifulSoup(svg, 'xml')
+        to_remove = soup.find_all(attrs={"graphic_group_label": ["Atlas - Human Sulci", "Atlas - Human Hotspots"]})
+        for r in to_remove:
+            r.decompose()
         
-        for parent in root.getchildren():
-            for elem in parent.getchildren():
-                if elem.attrib['graphic_group_label'] in remove_attribs:
-                    parent.remove(elem)
-        doc.write(output_filename)
-        #return doc
-
+        print(f'Writing cleaned svg to {output_filename}')
+        outfile.write(str(soup))
 
 
 def modify_svg(svg_file, svg_output, graph_id, lookup_table, cbar_file=None):
