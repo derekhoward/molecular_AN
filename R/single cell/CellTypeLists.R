@@ -8,6 +8,7 @@ library(tmod)
 #targetGeneList <- "Duncan et al. rs4622308.hypenFixed.txt"
 #targetGeneList <- "Lutter et al. Table S3.RestrictedEating.hypenFixed.txt"
 #targetGeneList <- "Lutter et al. Table S4.BingeEating.hypenFixed.txt"
+
 targetSymbolsHuman <- read_csv(paste0("./data/genelists/",targetGeneList), col_names=F)$X1
 
 
@@ -57,17 +58,18 @@ writeTableWrapper <- function(prefixFilter, result) {
   subsetResult
 }
 
-(writeTableWrapper("NeuroExpresso.Cortex", result))
 (writeTableWrapper("NeuroExpresso.All", result))
-(writeTableWrapper("NeuroExpresso.Brainstem", result))
-(writeTableWrapper("NeuroExpresso.Midbrain", result))
+(writeTableWrapper("NeuroExpresso.Cortex", result))
 (writeTableWrapper("NeuroExpresso.Amygdala", result))
-(writeTableWrapper("NeuroExpresso.SubstantiaNigra", result))
+(writeTableWrapper("NeuroExpresso.Brainstem", result))
 
-sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Brainstem.Noradrenergic, targetSymbolsHuman)) #For Lutter
+sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Brainstem.Microglia, targetSymbolsHuman)) 
+sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Brainstem.Microglia_activation, targetSymbolsHuman)) #For Lutter
+sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Brainstem.Microglia_deactivation, targetSymbolsHuman)) #For Lutter
 sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Cortex.OligoPrecursors, targetSymbolsHuman)) #For Duncan
 sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Brainstem.Microglia, targetSymbolsHuman))
 sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Midbrain.Microglia, targetSymbolsHuman))
+sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Brainstem.Noradrenergic, targetSymbolsHuman))
 
 sort(intersect(geneSets$MODULES2GENES$NeuroExpresso.Cortex.Oligo, targetSymbolsHuman))
 
