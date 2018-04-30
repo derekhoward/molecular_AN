@@ -81,3 +81,4 @@ ENV/
 .Rproj.user
 molecular_AN.Rproj
 results
+.Rhistory
