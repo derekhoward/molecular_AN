@@ -79,4 +79,4 @@ ENV/
 # mypy
 .mypy_cache/
 .Rproj.user
-.Rproj
+molecular_AN.Rproj
