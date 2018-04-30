@@ -80,3 +80,4 @@ ENV/
 .mypy_cache/
 .Rproj.user
 molecular_AN.Rproj
+results
