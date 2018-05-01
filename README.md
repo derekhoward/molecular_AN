@@ -10,10 +10,17 @@
 
 4. Setup python3.6 environment with essential dependencies in requirements.txt
   - Use conda environments create an env named molecularAN:
-
-  >conda create -n molecularAN python=3.6
+```
+  conda create -n molecularAN python=3.6
+  source activate molecularAN
   pip install -r requirements.txt
-
+```
+  - also install rpy2, this code might be needed for osx users (thanks to Clemens Brunner)
+```
+export LDFLAGS=-L/Library/Frameworks/R.framework/Resources/lib
+export PATH=/usr/local/opt/llvm/bin:$PATH
+conda install rpy2 --no-cache
+```
 5. Process the Allen data to get the aggregated data:
 
   >python data_processing.py
