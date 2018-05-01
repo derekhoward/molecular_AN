@@ -17,10 +17,12 @@ results_dir.mkdir(exist_ok=True)
 
 def add_sig_marks(df):
     """adds markers to brain names column: ** for pFDR < 0.05 and * p<0.05"""
-    # add ** if FDR < 0.05
-    df.loc[df['pFDR'] < 0.05, 'brain area'] = df.loc[df['pFDR']<0.05, 'brain area'].apply(lambda x: str(x)+'**')
-    # add * if FDR>0.05 but p<0.05
-    df.loc[(df['pFDR'] > 0.05) & (df['p'] < 0.05), 'brain area'] = df.loc[(df['pFDR'] > 0.05) & (df['p'] < 0.05), 'brain area'].apply(lambda x: str(x)+'*')
+    # add ** if FDR < 0.05 and AUROC > 0.5
+    mask = (df['pFDR'] < 0.05) & (df['AUROC'] > 0.5)
+    df.loc[mask, 'brain area'] = df.loc[mask, 'brain area'].apply(lambda x: str(x)+' **')
+    # add * if FDR>0.05 but p<0.05 and AUROC > 0.5
+    mask = (df['pFDR'] > 0.05) & (df['p'] < 0.05) & (df['AUROC'] > 0.5)
+    df.loc[mask, 'brain area'] = df.loc[mask, 'brain area'].apply(lambda x: str(x)+' *')
 
     return df
 
@@ -106,7 +108,7 @@ process_table(results_fetal_negraes, fetal_brain_areas, 3, 'fetal_negraes_ROI.cs
 # - repeat same procedure but using rpy2 to generate table since there are only 6 genes of interest
 
 # Adult brain data
-
+'''
 results_adult_duncan = hba.generate_Rstats_table(exp_df=adult_exp, gene_list=duncan)
 process_table(results_adult_duncan, brain_areas, 3, 'adult_duncan_ROI.csv')
 
@@ -114,7 +116,7 @@ process_table(results_adult_duncan, brain_areas, 3, 'adult_duncan_ROI.csv')
 
 results_fetal_duncan = hba.generate_Rstats_table(exp_df=fetal_exp, gene_list=duncan)
 process_table(results_fetal_duncan, fetal_brain_areas, 3,  'fetal_duncan_ROI.csv')
-
+'''
 # Results with LutterAN and LutterBN gene lists
 
 # Adult data
