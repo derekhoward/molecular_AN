@@ -69,13 +69,13 @@ def make_violins(exp, brain_areas, gene_list, brain_area_labels=None):
     tidy = subset.reset_index().melt(id_vars=['gene_symbol', 'in_gene_list'],
                                      var_name='brain_area',
                                      value_name='expression')
-    tidy['in_gene_list'] = tidy['in_gene_list'].map({True: 'Disease genes',
+    tidy['in_gene_list'] = tidy['in_gene_list'].map({True: 'AN genes',
                                                      False: 'Background genes'})
     with sns.plotting_context('notebook', font_scale=1.25):
         fig, ax = plt.subplots(figsize=(12, 12))
         sns.violinplot(y='brain_area', x='expression', hue='in_gene_list',
-                       palette={'Disease genes': '#D9D4D3', 'Background genes': '#636364'},
-                       split=True, hue_order=['Disease genes', 'Background genes'],
+                       palette={'AN genes': '#D9D4D3', 'Background genes': '#636364'},
+                       split=True, hue_order=['AN genes', 'Background genes'],
                        inner='quartiles', data=tidy, ax=ax)
         ax.set_xlabel('Expression (z-scored)')
         ax.set_ylabel('')
