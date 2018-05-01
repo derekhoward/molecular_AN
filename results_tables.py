@@ -1,6 +1,7 @@
 import pandas as pd
 import data_processing as data
 import HBA_analysis as hba
+import math
 from pathlib import Path
 
 adult_exp = data.get_dataset(dataset='adult', probes_strategy='reannotator')
@@ -24,9 +25,37 @@ def add_sig_marks(df):
     return df
 
 
-def process_table(results, brain_areas, filename):
+def round_sigfigs(num, sig_figs):
+#http://code.activestate.com/recipes/578114-round-number-to-specified-number-of-significant-di/
+    """Round to specified number of sigfigs.
+
+    >>> round_sigfigs(0, sig_figs=4)
+    0
+    >>> int(round_sigfigs(12345, sig_figs=2))
+    12000
+    >>> int(round_sigfigs(-12345, sig_figs=2))
+    -12000
+    >>> int(round_sigfigs(1, sig_figs=2))
+    1
+    >>> '{0:.3}'.format(round_sigfigs(3.1415, sig_figs=2))
+    '3.1'
+    >>> '{0:.3}'.format(round_sigfigs(-3.1415, sig_figs=2))
+    '-3.1'
+    >>> '{0:.5}'.format(round_sigfigs(0.00098765, sig_figs=2))
+    '0.00099'
+    >>> '{0:.6}'.format(round_sigfigs(0.00098765, sig_figs=3))
+    '0.000988'
+    """
+    if num != 0:
+        return round(num, -int(math.floor(math.log10(abs(num))) - (sig_figs - 1)))
+    else:
+        return 0 
+
+
+def process_table(results, brain_areas, sig_figs, filename):
     output = results.loc[brain_areas, :]
     output.index.name = 'brain area'
+    output = output.applymap(lambda x: round_sigfigs(x, sig_figs))
     output.reset_index(inplace=True)
     output = add_sig_marks(output)
     output_loc = results_dir / filename
@@ -43,7 +72,7 @@ brain_areas = ['lateral parabrachial nucleus', 'medial parabrachial nucleus',
 
 results_adult_negraes = hba.generate_stats_table(exp_df=adult_exp, gene_list=negraes)
 results_adult_negraes['Rank'] = results_adult_negraes.AUC.rank(ascending=False)
-process_table(results_adult_negraes, brain_areas, 'adult_negraes.csv')
+process_table(results_adult_negraes, brain_areas, 3, 'adult_negraes.csv')
 
 # Fetal allen brain data
 subgenual_cingulate_cortex = ['IZ in subgenual (subcallosal) cingulate cortex', 'VZ in subgenual cingulate neocortex',
@@ -68,22 +97,22 @@ fetal_brain_areas = ['lateral parabrachial nucleus', 'medial parabrachial nucleu
 
 results_fetal_negraes = hba.generate_stats_table(exp_df=fetal_exp, gene_list=negraes)
 results_fetal_negraes['Rank'] = results_fetal_negraes.AUC.rank(ascending=False)
-process_table(results_fetal_negraes, fetal_brain_areas, 'fetal_negraes.csv')
+process_table(results_fetal_negraes, fetal_brain_areas, 3, 'fetal_negraes.csv')
 
 
 # Results with Duncan gene list
 # - repeat same procedure but using rpy2 to generate table since there are only 6 genes of interest
 
 # Adult brain data
-"""
+
 results_adult_duncan = hba.generate_Rstats_table(exp_df=adult_exp, gene_list=duncan)
-process_table(results_adult_duncan, brain_areas, 'adult_duncan.csv')
+process_table(results_adult_duncan, brain_areas, 3, 'adult_duncan.csv')
 
 # Fetal brain data
 
 results_fetal_duncan = hba.generate_Rstats_table(exp_df=fetal_exp, gene_list=duncan)
-process_table(results_fetal_duncan, fetal_brain_areas, 'fetal_duncan.csv')
-"""
+process_table(results_fetal_duncan, fetal_brain_areas, 3,  'fetal_duncan.csv')
+
 # Results with LutterAN and LutterBN gene lists
 
 # Adult data
@@ -91,12 +120,12 @@ process_table(results_fetal_duncan, fetal_brain_areas, 'fetal_duncan.csv')
 results_adult_lutterAN = hba.generate_stats_table(exp_df=adult_exp, gene_list=lutterAN)
 results_adult_lutterBN = hba.generate_stats_table(exp_df=adult_exp, gene_list=lutterBN)
 
-process_table(results_adult_lutterAN, brain_areas, 'adult_lutterAN.csv')
-process_table(results_adult_lutterBN, brain_areas, 'adult_lutterBN.csv')
+process_table(results_adult_lutterAN, brain_areas, 3, 'adult_lutterAN.csv')
+process_table(results_adult_lutterBN, brain_areas, 3, 'adult_lutterBN.csv')
 
 # Fetal expression data
 results_fetal_lutterAN = hba.generate_stats_table(exp_df=fetal_exp, gene_list=lutterAN)
 results_fetal_lutterBN = hba.generate_stats_table(exp_df=fetal_exp, gene_list=lutterBN)
 
-process_table(results_fetal_lutterAN, brain_areas, 'fetal_lutterAN.csv')
-process_table(results_fetal_lutterBN, brain_areas, 'fetal_lutterBN.csv')
+process_table(results_fetal_lutterAN, fetal_brain_areas, 3, 'fetal_lutterAN.csv')
+process_table(results_fetal_lutterBN, fetal_brain_areas, 3, 'fetal_lutterBN.csv')
