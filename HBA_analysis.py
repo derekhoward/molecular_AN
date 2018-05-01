@@ -76,8 +76,8 @@ def generate_stats_table(exp_df, gene_list, verbose=True):
     fdr_corrected = pd.Series(fdr_corrected, index=pvalues.index)
     auc = exp_df.apply(lambda col: calc_AUC(exp_series=col, gene_list=gene_list))
 
-    table = pd.concat([pvalues, fdr_corrected, auc],
-                      keys=['p', 'pFDR', 'AUROC'], axis=1)
+    table = pd.concat([auc, pvalues, fdr_corrected],
+                      keys=['AUROC', 'p', 'pFDR', ], axis=1)
     table.set_index(exp_df.columns, inplace=True)
     return table.sort_values('AUROC', ascending=False)
 
