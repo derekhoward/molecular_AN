@@ -15,6 +15,12 @@
   source activate molecularAN
   pip install -r requirements.txt
 ```
+  - also install rpy2, this code might be needed for osx users
+```
+export LDFLAGS=-L/Library/Frameworks/R.framework/Resources/lib
+export PATH=/usr/local/opt/llvm/bin:$PATH
+conda install rpy2 --no-cache
+```
 5. Process the Allen data to get the aggregated data:
 
   >python data_processing.py
