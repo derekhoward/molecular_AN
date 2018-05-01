@@ -254,15 +254,15 @@ def get_genelist(list):
         genelist = genelist.iloc[:, 0]
 
     elif list == 'duncan':
-        genelist = pd.read_csv('./data/genelists/Duncan et al. rs4622308.genelist.txt', header=None)
+        genelist = pd.read_csv('./data/genelists/Duncan et al. rs4622308.hypenFixed.txt', header=None)
         genelist = genelist.iloc[:, 0]
 
     elif list == 'lutterAN':
-        genelist = pd.read_csv('./data/genelists/Lutter et al. Table S3.RestrictedEating.hypenFixed.thresholded.txt', header=None)
+        genelist = pd.read_csv('./data/genelists/Lutter et al. Table S3.RestrictedEating.hypenFixed.txt', header=None)
         genelist = genelist.iloc[:, 0]
 
     elif list == 'lutterBN':
-        genelist = pd.read_csv('./data/genelists/Lutter et al. Table S4.BingeEating.hypenFixed.thresholded.txt', header=None)
+        genelist = pd.read_csv('./data/genelists/Lutter et al. Table S4.BingeEating.hypenFixed.txt', header=None)
         genelist = genelist.iloc[:, 0]
 
     elif list == 'obs_synd':
