@@ -16,11 +16,11 @@ results_dir = Path('./results')
 results_dir.mkdir(exist_ok=True)
 
 def add_sig_marks(df):
-    """adds markers to brain names column: ** for FDR < 0.05 and * p<0.05"""
+    """adds markers to brain names column: ** for pFDR < 0.05 and * p<0.05"""
     # add ** if FDR < 0.05
-    df.loc[df['FDR'] < 0.05, 'brain area'] = df.loc[df['FDR']<0.05, 'brain area'].apply(lambda x: str(x)+'**')
+    df.loc[df['pFDR'] < 0.05, 'brain area'] = df.loc[df['pFDR']<0.05, 'brain area'].apply(lambda x: str(x)+'**')
     # add * if FDR>0.05 but p<0.05
-    df.loc[(df['FDR'] > 0.05) & (df['p'] < 0.05), 'brain area'] = df.loc[(df['FDR'] > 0.05) & (df['p'] < 0.05), 'brain area'].apply(lambda x: str(x)+'*')
+    df.loc[(df['pFDR'] > 0.05) & (df['p'] < 0.05), 'brain area'] = df.loc[(df['pFDR'] > 0.05) & (df['p'] < 0.05), 'brain area'].apply(lambda x: str(x)+'*')
 
     return df
 
@@ -71,8 +71,9 @@ brain_areas = ['lateral parabrachial nucleus', 'medial parabrachial nucleus',
                'central nucleus', 'bed  nucleus of stria terminalis']
 
 results_adult_negraes = hba.generate_stats_table(exp_df=adult_exp, gene_list=negraes)
-results_adult_negraes['Rank'] = results_adult_negraes.AUC.rank(ascending=False)
-process_table(results_adult_negraes, brain_areas, 3, 'adult_negraes.csv')
+results_adult_negraes.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'adult_negraes.csv')
+results_adult_negraes['Rank'] = results_adult_negraes.AUROC.rank(ascending=False)
+process_table(results_adult_negraes, brain_areas, 3, 'adult_negraes_ROI.csv')
 
 # Fetal allen brain data
 subgenual_cingulate_cortex = ['IZ in subgenual (subcallosal) cingulate cortex', 'VZ in subgenual cingulate neocortex',
@@ -96,8 +97,9 @@ fetal_brain_areas = ['lateral parabrachial nucleus', 'medial parabrachial nucleu
                      'bed nucleus of stria terminalis', 'subgenual_cingulate_cortex', 'central_amygdala']
 
 results_fetal_negraes = hba.generate_stats_table(exp_df=fetal_exp, gene_list=negraes)
-results_fetal_negraes['Rank'] = results_fetal_negraes.AUC.rank(ascending=False)
-process_table(results_fetal_negraes, fetal_brain_areas, 3, 'fetal_negraes.csv')
+results_fetal_negraes.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'fetal_negraes.csv')
+results_fetal_negraes['Rank'] = results_fetal_negraes.AUROC.rank(ascending=False)
+process_table(results_fetal_negraes, fetal_brain_areas, 3, 'fetal_negraes_ROI.csv')
 
 
 # Results with Duncan gene list
@@ -106,12 +108,12 @@ process_table(results_fetal_negraes, fetal_brain_areas, 3, 'fetal_negraes.csv')
 # Adult brain data
 
 results_adult_duncan = hba.generate_Rstats_table(exp_df=adult_exp, gene_list=duncan)
-process_table(results_adult_duncan, brain_areas, 3, 'adult_duncan.csv')
+process_table(results_adult_duncan, brain_areas, 3, 'adult_duncan_ROI.csv')
 
 # Fetal brain data
 
 results_fetal_duncan = hba.generate_Rstats_table(exp_df=fetal_exp, gene_list=duncan)
-process_table(results_fetal_duncan, fetal_brain_areas, 3,  'fetal_duncan.csv')
+process_table(results_fetal_duncan, fetal_brain_areas, 3,  'fetal_duncan_ROI.csv')
 
 # Results with LutterAN and LutterBN gene lists
 
@@ -120,12 +122,12 @@ process_table(results_fetal_duncan, fetal_brain_areas, 3,  'fetal_duncan.csv')
 results_adult_lutterAN = hba.generate_stats_table(exp_df=adult_exp, gene_list=lutterAN)
 results_adult_lutterBN = hba.generate_stats_table(exp_df=adult_exp, gene_list=lutterBN)
 
-process_table(results_adult_lutterAN, brain_areas, 3, 'adult_lutterAN.csv')
-process_table(results_adult_lutterBN, brain_areas, 3, 'adult_lutterBN.csv')
+process_table(results_adult_lutterAN, brain_areas, 3, 'adult_lutterAN_ROI.csv')
+process_table(results_adult_lutterBN, brain_areas, 3, 'adult_lutterBN_ROI.csv')
 
 # Fetal expression data
 results_fetal_lutterAN = hba.generate_stats_table(exp_df=fetal_exp, gene_list=lutterAN)
 results_fetal_lutterBN = hba.generate_stats_table(exp_df=fetal_exp, gene_list=lutterBN)
 
-process_table(results_fetal_lutterAN, fetal_brain_areas, 3, 'fetal_lutterAN.csv')
-process_table(results_fetal_lutterBN, fetal_brain_areas, 3, 'fetal_lutterBN.csv')
+process_table(results_fetal_lutterAN, fetal_brain_areas, 3, 'fetal_lutterAN_ROI.csv')
+process_table(results_fetal_lutterBN, fetal_brain_areas, 3, 'fetal_lutterBN_ROI.csv')
