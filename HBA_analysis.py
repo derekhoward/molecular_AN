@@ -2,8 +2,8 @@ import pandas as pd
 from scipy.stats import mannwhitneyu
 import statsmodels.sandbox.stats.multicomp
 from sklearn import metrics
-#import rpy2
-#import rpy2.robjects
+import rpy2
+import rpy2.robjects
 
 def calc_pvalues(exp_series, gene_list):
     X = exp_series[exp_series.index.isin(gene_list)]
@@ -77,9 +77,9 @@ def generate_stats_table(exp_df, gene_list, verbose=True):
     auc = exp_df.apply(lambda col: calc_AUC(exp_series=col, gene_list=gene_list))
 
     table = pd.concat([pvalues, fdr_corrected, auc],
-                      keys=['p', 'FDR', 'AUC'], axis=1)
+                      keys=['p', 'pFDR', 'AUROC'], axis=1)
     table.set_index(exp_df.columns, inplace=True)
-    return table.sort_values('AUC', ascending=False)
+    return table.sort_values('AUROC', ascending=False)
 
 
 def generate_Rstats_table(exp_df, gene_list, verbose=False):
@@ -116,6 +116,6 @@ def generate_Rstats_table(exp_df, gene_list, verbose=False):
     auc = exp_df.apply(lambda col: calc_AUC(exp_series=col, gene_list=gene_list))
 
     table = pd.concat([pvalues, fdr_corrected, auc],
-                      keys=['p', 'FDR', 'AUC'], axis=1)
+                      keys=['p', 'pFDR', 'AUROC'], axis=1)
     table.set_index(exp_df.columns, inplace=True)
-    return table.sort_values('AUC', ascending=False)
+    return table.sort_values('AUROC', ascending=False)
