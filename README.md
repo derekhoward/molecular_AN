@@ -15,7 +15,7 @@
   source activate molecularAN
   pip install -r requirements.txt
 ```
-  - also install rpy2, this code might be needed for osx users
+  - also install rpy2, this code might be needed for osx users (thanks to Clemens Brunner)
 ```
 export LDFLAGS=-L/Library/Frameworks/R.framework/Resources/lib
 export PATH=/usr/local/opt/llvm/bin:$PATH
