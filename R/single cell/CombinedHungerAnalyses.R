@@ -67,8 +67,10 @@ for (targetGeneList in targetGeneLists) {
   write_csv(filteredSummary, paste0("./results/cell types/", targetGeneList, ".hungerPerGene.wilcox.metaP.summary.csv"))
   
   isSigGrouping <- filteredSummary %>% group_by(isSig) %>% summarize(n=n()) 
+  print(paste("Number genes tested:", nrow(filteredSummary)))
   print(paste("Number genes isSig:", signif(nrow(filteredSummary %>% filter(isSig)))))
   print(paste("Percent genes isSig:", signif(nrow(filteredSummary %>% filter(isSig))/nrow(filteredSummary)*100, digits=4)))
+  #checked with hypergeometic test too and I get similar results (ns)
   print(paste("binomial test on isSig p=", binom.test(isSigGrouping$n, p=isSigGroupingRatioAll )$p.value)) #value from all gene result
 }
 
