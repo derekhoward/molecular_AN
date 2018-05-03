@@ -73,7 +73,7 @@ brain_areas = ['lateral parabrachial nucleus', 'medial parabrachial nucleus',
                'central nucleus', 'bed  nucleus of stria terminalis']
 
 results_adult_negraes = hba.generate_stats_table(exp_df=adult_exp, gene_list=negraes)
-results_adult_negraes.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'adult_negraes.csv')
+results_adult_negraes.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'Supplement Table S1 -adult_negraes.csv')
 results_adult_negraes['Rank'] = results_adult_negraes.AUROC.rank(ascending=False)
 process_table(results_adult_negraes, brain_areas, 3, 'adult_negraes_ROI.csv')
 
@@ -99,7 +99,7 @@ fetal_brain_areas = ['lateral parabrachial nucleus', 'medial parabrachial nucleu
                      'bed nucleus of stria terminalis', 'subgenual_cingulate_cortex', 'central_amygdala']
 
 results_fetal_negraes = hba.generate_stats_table(exp_df=fetal_exp, gene_list=negraes)
-results_fetal_negraes.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'fetal_negraes.csv')
+results_fetal_negraes.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'Supplement Table S2 -fetal_negraes.csv')
 results_fetal_negraes['Rank'] = results_fetal_negraes.AUROC.rank(ascending=False)
 process_table(results_fetal_negraes, fetal_brain_areas, 3, 'fetal_negraes_ROI.csv')
 
