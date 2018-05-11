@@ -265,6 +265,15 @@ def get_genelist(list):
         genelist = pd.read_csv('./data/genelists/Lutter et al. Table S4.BingeEating.hypenFixed.txt', header=None)
         genelist = genelist.iloc[:, 0]
 
+    elif list == 'microglia':
+        genelist = pd.read_csv('./data/genelists/NeuroExpresso.All.Microglia.human.txt', header=None)
+        genelist = genelist.iloc[:, 0]
+
+    elif list == 'ThreeTACGenes':
+        genelist = pd.read_csv('./data/genelists/Negraes.ThreeTACGenes.txt', header=None)
+        genelist = genelist.iloc[:, 0]
+
+
     elif list == 'obs_synd':
         genelist = ['AK1', 'LARP6', 'MBTPS1', 'S1P', 'PVALB', 'RFNG', 'SMARCD3']
         genelist = pd.Series(genelist)

@@ -25,3 +25,7 @@ for(genelist in genelists) {
   write.table(sort(unique(targetSymbolsMouse)), paste0(baseName, ".hypenFixed.mouse.txt"), col.names = F, row.names = F, quote = F)
 }
 
+#conversion of microglia list for discussion section
+microGliaGenes <- read_csv("./data/single_cell/gene lists/NeuroExpresso.All.Microglia.txt", col_names=F)$X1
+microGliaGenes <- unique(mouse2human(microGliaGenes)$humanGene)
+write.table(sort(microGliaGenes), "./data/genelists/NeuroExpresso.All.Microglia.human.txt", col.names = F, row.names = F, quote = F)

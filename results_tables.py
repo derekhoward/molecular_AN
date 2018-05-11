@@ -133,3 +133,23 @@ results_fetal_lutterBN = hba.generate_stats_table(exp_df=fetal_exp, gene_list=lu
 
 process_table(results_fetal_lutterAN, fetal_brain_areas, 3, 'fetal_lutterAN_ROI.csv')
 process_table(results_fetal_lutterBN, fetal_brain_areas, 3, 'fetal_lutterBN_ROI.csv')
+
+#microglia
+microglia = data.get_genelist('microglia')
+results_adult = hba.generate_stats_table(exp_df=adult_exp, gene_list=microglia)
+results_fetal = hba.generate_stats_table(exp_df=fetal_exp, gene_list=microglia)
+results_adult.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'microglia.adult.csv')
+results_fetal.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'microglia.fetal.csv')
+
+#Three TAC genes
+tac3 = data.get_genelist('ThreeTACGenes')
+results_adult = hba.generate_Rstats_table(exp_df=adult_exp, gene_list=tac3)
+results_fetal = hba.generate_Rstats_table(exp_df=fetal_exp, gene_list=tac3)
+results_adult.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'ThreeTACGenes.adult.csv')
+results_fetal.applymap(lambda x: round_sigfigs(x, 3)).to_csv(results_dir / 'ThreeTACGenes.fetal.csv')
+
+results_fetal['Rank'] = results_fetal.AUROC.rank(ascending=False)
+process_table(results_fetal, fetal_brain_areas, 3, 'ThreeTACGenes.fetal.ROI.csv')
+
+results_adult['Rank'] = results_adult.AUROC.rank(ascending=False)
+process_table(results_adult, brain_areas, 3, 'ThreeTACGenes.adult.ROI.csv')
