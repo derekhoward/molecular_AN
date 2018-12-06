@@ -1,7 +1,6 @@
+#if you get rpy2 errors in pycharm, try running it from the command line
 import data_processing as data
-import HBA_analysis as hba
 import svg_utils
-import glob
 from pathlib import Path
 
 
@@ -29,6 +28,10 @@ negraes = data.get_genelist('negraes')
 # create tables to match AUC values to structures
 adult_lookup = svg_utils.create_auc_lookup(exp_df=adult_exp, gene_list=negraes, ontology='adult')
 fetal_lookup = svg_utils.create_auc_lookup(exp_df=fetal_exp, gene_list=negraes, ontology='fetal')
+
+adult_lookup = adult_lookup.rename(index=str, columns={"AUROC": "AUC"})
+fetal_lookup = fetal_lookup.rename(index=str, columns={"AUROC": "AUC"})
+
 
 svg_utils.modify_svg(svg_dir / human_diagram, figures_dir / human_diagram, graph_id='adult', lookup_table=adult_lookup)
 
