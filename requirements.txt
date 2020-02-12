@@ -8,4 +8,4 @@ beautifulsoup4==4.6.0
 bs4==0.0.1
 matplotlib==2.2.2
 lxml==4.2.1
-requests==2.18.4
+requests==2.20.0
