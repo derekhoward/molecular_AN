@@ -6,7 +6,7 @@ library(dplyr)
 library(magrittr)
 library(tidyr)
 
-targetGeneLists <- c("Negraes et al. Table S5.hypenFixed.mouse.txt", "Duncan et al. rs4622308.hypenFixed.mouse.txt", "Lutter et al. Table S3.RestrictedEating.hypenFixed.mouse.txt", "Lutter et al. Table S4.BingeEating.hypenFixed.mouse.txt")
+targetGeneLists <- c("Negraes et al. Table S5.hypenFixed.mouse.txt", "Duncan et al. rs4622308.hypenFixed.mouse.txt", "Lutter et al. Table S3.RestrictedEating.hypenFixed.mouse.txt", "Lutter et al. Table S4.BingeEating.hypenFixed.mouse.txt", "Watson et al.TableS6.protein_coding.ALL.hypenFixed.mouse.txt")
 
 GSE87544_Chen <- read_csv(paste0("./results/cell types/allInHomologene.GSE87544.hungerPerGene.wilcox.csv"))
 GSE93374_Cambpell <- read_csv(paste0("./results/cell types/allInHomologene.GSE93374.hungerPerGene.wilcox.csv"))
@@ -30,7 +30,8 @@ bothDataSets %>% filter(geneSymbol == "Hsp90ab1")
 bothDataSetsSummary %<>% mutate(isSig = metaP.neg.adj < 0.05 | metaP.pos.adj < 0.05)
 sum(bothDataSetsSummary$isSig)
 nrow(bothDataSetsSummary)
-bothDataSetsSummary %<>% mutate(direction = sign(metaP.neg.adj - metaP.pos.adj))
+bothDataSetsSummary %<>% mutate(direction = sign(metaP.neg - metaP.pos))
+
 
 #add in medians across datasets
 normMeans <- bothDataSets %>% select(geneSymbol, batch, Normal) %>% dcast(geneSymbol ~ batch ) %>% 
@@ -38,7 +39,7 @@ normMeans <- bothDataSets %>% select(geneSymbol, batch, Normal) %>% dcast(geneSy
 hungerMeans <- bothDataSets %>% select(geneSymbol, batch, Hungry) %>% dcast(geneSymbol ~ batch ) %>% 
   rename(ChenBatch1HungerAvg = B1, ChenBatch2HungerAvg = B2, CampbellBatch6HungerAvg = b6)
 meanMatrix <- as_tibble(inner_join(normMeans, hungerMeans))
-meanMatrix %<>% select(geneSymbol, noquote(order(colnames(meanMatrix))))
+meanMatrix %<>% select(geneSymbol, CampbellBatch6FedAvg, CampbellBatch6HungerAvg, ChenBatch1FedAvg, ChenBatch1HungerAvg, ChenBatch2FedAvg ,ChenBatch2HungerAvg)
 bothDataSetsSummary <- inner_join(meanMatrix, bothDataSetsSummary)
 
 directionGroupingRatioAll <- bothDataSetsSummary %>% filter(isSig) %>% group_by(direction) %>% summarize(n=n()) %>% print()
@@ -51,7 +52,6 @@ isSigGroupingRatioAll <- binom.test(isSigGroupingRatioAll$n)$estimate
 #write out for genesets of interest
 allGenes <- c()
 for (targetGeneList in targetGeneLists) {
-  
   targetSymbols <- read_csv(paste0("./data/genelists/",targetGeneList), col_names=F)$X1
   print(targetGeneList)  
   allGenes <- union(allGenes, targetSymbols)
@@ -72,6 +72,7 @@ for (targetGeneList in targetGeneLists) {
   print(paste("Percent genes isSig:", signif(nrow(filteredSummary %>% filter(isSig))/nrow(filteredSummary)*100, digits=4)))
   #checked with hypergeometic test too and I get similar results (ns)
   print(paste("binomial test on isSig p=", binom.test(isSigGrouping$n, p=isSigGroupingRatioAll )$p.value)) #value from all gene result
+  print(paste("binomial test on isSig one-side p=", binom.test(isSigGrouping$n, p=isSigGroupingRatioAll , alternative="less")$p.value)) #value from all gene result
 }
 
 forSupplement <- bothDataSetsSummary %>% filter(geneSymbol %in% allGenes)
