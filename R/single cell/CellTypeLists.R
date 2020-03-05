@@ -8,6 +8,7 @@ library(tmod)
 #targetGeneList <- "Duncan et al. rs4622308.hypenFixed.txt"
 #targetGeneList <- "Lutter et al. Table S3.RestrictedEating.hypenFixed.txt"
 #targetGeneList <- "Lutter et al. Table S4.BingeEating.hypenFixed.txt"
+targetGeneList <- "Watson et al.TableS6.protein_coding.ALL.hypenFixed.txt"
 
 targetSymbolsHuman <- read_csv(paste0("./data/genelists/",targetGeneList), col_names=F)$X1
 
